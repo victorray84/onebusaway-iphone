@@ -16,7 +16,6 @@
 
 #import "OBANavigationTargetAware.h"
 #import "OBASearchController.h"
-#import "OBAScopeView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

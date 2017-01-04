@@ -37,11 +37,10 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
 @interface OBASearchResultsMapViewController ()<MKMapViewDelegate, UISearchBarDelegate>
 
 // IB UI
-@property(nonatomic,strong) IBOutlet OBAScopeView *scopeView;
-@property(nonatomic,strong) IBOutlet UISegmentedControl *searchTypeSegmentedControl;
-@property(nonatomic,strong) IBOutlet MKMapView * mapView;
-@property(nonatomic,strong) IBOutlet UISearchBar *searchBar;
-@property(nonatomic,strong) IBOutlet UILabel *mapLabel;
+@property(nonatomic,weak) IBOutlet UISegmentedControl *searchTypeSegmentedControl;
+@property(nonatomic,weak) IBOutlet MKMapView * mapView;
+@property(nonatomic,weak) IBOutlet UISearchBar *searchBar;
+@property(nonatomic,strong) UILabel *mapLabel;
 @property(nonatomic,strong) UIView *mapLabelContainer;
 
 // Programmatic UI
@@ -135,24 +134,19 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
 }
 
 - (void)configureNavigationBar {
-    self.navigationItem.leftBarButtonItem = self.trackingBarButtonItem;
+    self.searchBar.placeholder = NSLocalizedString(@"msg_search", @"");
 
-    self.listBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"lines"] style:UIBarButtonItemStylePlain target:self action:@selector(showListView:)];
-    self.listBarButtonItem.accessibilityLabel = NSLocalizedString(@"msg_nearby_stops_list", @"self.listBarButtonItem.accessibilityLabel");
-    self.navigationItem.rightBarButtonItem = self.listBarButtonItem;
+    CALayer *layer = self.searchBar.layer;
+    layer.shadowRadius = 1.f;
+    layer.shadowColor = [UIColor blackColor].CGColor;
+    layer.shadowOpacity = 0.5f;
+    layer.shadowOffset = CGSizeZero;
 
-    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    self.searchBar = ({
-        UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-        searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        searchBar.searchBarStyle = UISearchBarStyleMinimal;
-        searchBar.placeholder = NSLocalizedString(@"msg_search", @"");
-        searchBar.delegate = self;
-        searchBar;
-    });
-    [self.titleView addSubview:self.searchBar];
-    [self.searchBar sizeToFit];
-    self.navigationItem.titleView = self.titleView;
+//    self.navigationItem.leftBarButtonItem = self.trackingBarButtonItem;
+//
+//    self.listBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"lines"] style:UIBarButtonItemStylePlain target:self action:@selector(showListView:)];
+//    self.listBarButtonItem.accessibilityLabel = NSLocalizedString(@"msg_nearby_stops_list", @"self.listBarButtonItem.accessibilityLabel");
+//    self.navigationItem.rightBarButtonItem = self.listBarButtonItem;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -163,6 +157,8 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
 
     OBALogFunction();
 
@@ -184,6 +180,8 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+
     [[OBAApplication sharedApplication].locationManager stopUpdatingLocation];
     [self unregisterFromLocationNotifications];
 }
@@ -197,7 +195,6 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
     [self.navigationItem setRightBarButtonItem:nil animated:YES];
     [searchBar setShowsCancelButton:YES animated:YES];
     [self applyMapLabelWithText:nil];
-    [self animateInScopeView];
 
     return YES;
 }
@@ -206,7 +203,6 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
     [self.navigationItem setRightBarButtonItem:self.listBarButtonItem animated:YES];
     [self.navigationItem setLeftBarButtonItem:self.trackingBarButtonItem animated:YES];
     [searchBar setShowsCancelButton:NO animated:YES];
-    [self animateOutScopeView];
 
     return YES;
 }
@@ -242,35 +238,6 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
 
     [APP_DELEGATE navigateToTarget:target];
     [searchBar endEditing:YES];
-}
-
-- (void)animateInScopeView {
-    CGRect offscreenScopeFrame = self.scopeView.frame;
-
-    offscreenScopeFrame.size.width = CGRectGetWidth(self.view.frame);
-    offscreenScopeFrame.origin.y = -offscreenScopeFrame.size.height;
-    self.scopeView.frame = offscreenScopeFrame;
-    [self.view addSubview:self.scopeView];
-
-    CGRect finalScopeFrame = self.scopeView.frame;
-
-    finalScopeFrame.origin.y = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
-
-    [OBAAnimation performAnimations:^{
-        self.scopeView.frame = finalScopeFrame;
-    }];
-}
-
-- (void)animateOutScopeView {
-    CGRect offscreenScopeFrame = self.scopeView.frame;
-
-    offscreenScopeFrame.origin.y = -offscreenScopeFrame.size.height;
-
-    [OBAAnimation performAnimations:^{
-        self.scopeView.frame = offscreenScopeFrame;
-    } completion:^(BOOL finished) {
-        [self.scopeView removeFromSuperview];
-    }];
 }
 
 #pragma mark - Lazily Loaded Properties
@@ -1260,9 +1227,6 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
     self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
     self.navigationController.tabBarController.tabBar.barTintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-
-    self.scopeView.backgroundColor = [UIColor blackColor];
-    self.scopeView.tintColor = [OBATheme OBADarkGreen];
 }
 
 - (void)setRegularStyle {
@@ -1272,9 +1236,6 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
     self.navigationController.navigationBar.barTintColor = nil;
     self.navigationController.tabBarController.tabBar.barTintColor = nil;
     self.navigationController.navigationBar.tintColor = [OBATheme OBAGreen];
-
-    self.scopeView.backgroundColor = [OBATheme OBAGreenWithAlpha:0.8f];
-    self.scopeView.tintColor = nil;
 }
 
 - (MKUserTrackingBarButtonItem*)trackingBarButtonItem {
