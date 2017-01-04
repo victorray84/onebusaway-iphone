@@ -178,6 +178,7 @@
 		9359D1281DB92B4200CABFBD /* OBAModelService_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9359D1271DB92B4200CABFBD /* OBAModelService_Tests.m */; };
 		93631E4C1604F96800CB7209 /* OBAApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93631E4B1604F96800CB7209 /* OBAApplicationDelegate.m */; };
 		9368E5C01DB1584900C329D0 /* OBAEmptyDataSetSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 9368E5BF1DB1584900C329D0 /* OBAEmptyDataSetSource.m */; };
+		9369B1421E1DA8C900B8E99F /* ISHHoverBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 9369B1411E1DA8C900B8E99F /* ISHHoverBar.m */; };
 		9385EC3B1DCF14C60020CCB2 /* OBASettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9385EC3A1DCF14C60020CCB2 /* OBASettingsViewController.m */; };
 		9385EC401DCF1D910020CCB2 /* ServiceAlertDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9385EC3F1DCF1D910020CCB2 /* ServiceAlertDetailsViewController.swift */; };
 		938B842C1D868A0500DB0AF0 /* GoogleAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 938B84241D8689E900DB0AF0 /* GoogleAnalytics.framework */; };
@@ -519,6 +520,8 @@
 		9363D5911D6ADE6600A7021A /* yorkca.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = yorkca.gpx; sourceTree = "<group>"; };
 		9368E5BE1DB1584900C329D0 /* OBAEmptyDataSetSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBAEmptyDataSetSource.h; sourceTree = "<group>"; };
 		9368E5BF1DB1584900C329D0 /* OBAEmptyDataSetSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBAEmptyDataSetSource.m; sourceTree = "<group>"; };
+		9369B1401E1DA8C900B8E99F /* ISHHoverBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISHHoverBar.h; sourceTree = "<group>"; };
+		9369B1411E1DA8C900B8E99F /* ISHHoverBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISHHoverBar.m; sourceTree = "<group>"; };
 		936F45D91C78D06600C61656 /* OneBusAwayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OneBusAwayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9385EC391DCF14C60020CCB2 /* OBASettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBASettingsViewController.h; sourceTree = "<group>"; };
 		9385EC3A1DCF14C60020CCB2 /* OBASettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBASettingsViewController.m; sourceTree = "<group>"; };
@@ -1022,6 +1025,7 @@
 		934197BF1DB0C14C004BBBB7 /* externals */ = {
 			isa = PBXGroup;
 			children = (
+				9369B13F1E1DA8C900B8E99F /* ISHHoverBar */,
 				93FE60231E0B2F34006EC9FB /* SVPulsingAnnotationView */,
 				931CED861E01E1B600BB0723 /* BTBalloon */,
 				931E3A081DD566810064D680 /* AFMSlidingCell */,
@@ -1406,6 +1410,15 @@
 			path = empty_data_sets;
 			sourceTree = "<group>";
 		};
+		9369B13F1E1DA8C900B8E99F /* ISHHoverBar */ = {
+			isa = PBXGroup;
+			children = (
+				9369B1401E1DA8C900B8E99F /* ISHHoverBar.h */,
+				9369B1411E1DA8C900B8E99F /* ISHHoverBar.m */,
+			);
+			path = ISHHoverBar;
+			sourceTree = "<group>";
+		};
 		93FE60231E0B2F34006EC9FB /* SVPulsingAnnotationView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1699,6 +1712,7 @@
 				934196E21DB0C124004BBBB7 /* MKMapView+oba_Additions.m in Sources */,
 				9341978F1DB0C140004BBBB7 /* OBASearchResultsListViewController.m in Sources */,
 				934198171DB0C1BA004BBBB7 /* OBARotatingButton.m in Sources */,
+				9369B1421E1DA8C900B8E99F /* ISHHoverBar.m in Sources */,
 				93FE60261E0B2F34006EC9FB /* SVPulsingAnnotationView.m in Sources */,
 				934197A81DB0C140004BBBB7 /* OBAReportProblemWithRecentTripsViewController.m in Sources */,
 				930AFE991DD11EF90092AE82 /* OBAWalkableCell.m in Sources */,

@@ -35,6 +35,10 @@
                     </constraints>
                     <textInputTraits key="textInputTraits"/>
                 </searchBar>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qlm-Ta-B39" customClass="ISHHoverBar">
+                    <rect key="frame" x="332" y="475" width="70" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>

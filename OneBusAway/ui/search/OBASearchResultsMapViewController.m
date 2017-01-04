@@ -15,14 +15,15 @@
  */
 
 #import "OBASearchResultsMapViewController.h"
+@import Masonry;
 @import OBAKit;
+#import "ISHHoverBar.h"
 #import "OBASearchResultsListViewController.h"
 #import "OBAStopViewController.h"
 #import "OBAAnalytics.h"
 #import "OBAAlerts.h"
 #import "OBAAnimation.h"
 #import "OBAMapActivityIndicatorView.h"
-@import Masonry;
 #import "OBAVibrantBlurContainerView.h"
 
 #define kRouteSegmentIndex          0
