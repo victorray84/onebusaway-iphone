@@ -24,7 +24,7 @@ open class OBAFloatingButton: UIButton {
         configure()
     }
 
-    private func configure() {
+    public func configure() {
         self.backgroundColor = OBATheme.color(withRed: 247, green: 245, blue: 247, alpha: 1.0)
 
         self.showsTouchWhenHighlighted = true
