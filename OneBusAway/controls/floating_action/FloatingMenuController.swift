@@ -9,28 +9,66 @@
 import SnapKit
 import UIKit
 
-class FloatingMenuController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+@objc protocol FloatingMenuDataSource {
+    func rowsFor(_ floatingMenu: FloatingMenuController) -> [FloatingMenuAction]?
+}
 
-    private var tableView: UITableView?
+class FloatingMenuController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    private var actions: [FloatingMenuAction] = []
+
+    public weak var dataSource: FloatingMenuDataSource?
+
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView.init(frame: CGRect.zero)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.backgroundColor = UIColor.clear
+        tableView.tableFooterView = UIView.init()
+        tableView.separatorStyle = .none
+        tableView.isScrollEnabled = false
+        return tableView
+    }()
+
+    private var floatingActionButton = FloatingButton.init(frame: CGRect.zero)
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tableView = UITableView.init(frame: self.view.bounds)
-        self.tableView?.dataSource = self
-        self.tableView?.delegate = self
-        self.tableView?.backgroundColor = UIColor.clear
-        self.tableView?.tableFooterView = UIView.init()
-        self.tableView?.separatorStyle = .none
-        self.view.addSubview(self.tableView!)
-
         self.view.backgroundColor = UIColor.init(white: 0.0, alpha: 0.5)
+
+        self.view.addSubview(self.floatingActionButton)
+        self.view.addSubview(self.tableView)
+
+        self.floatingActionButton.snp.makeConstraints { (make) -> Void in
+            make.right.equalTo(self.view).inset(20)
+            make.bottom.equalTo(self.view).inset(60)
+        }
+
+        self.tableView.snp.makeConstraints { (make) -> Void in
+            make.bottom.equalTo(self.floatingActionButton.snp.top).offset(OBATheme.defaultPadding())
+            make.width.equalToSuperview()
+            make.top.equalToSuperview()
+        }
+
+        self.reloadData()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.updateContentInset()
+    }
+
+    // MARK: - Data Loading
+
+    public func reloadData() {
+        self.actions = self.dataSource?.rowsFor(self) ?? []
+        self.tableView.reloadData()
     }
 
     // MARK: - UITableView
 
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return self.actions.count
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -40,10 +78,32 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
             cell = UITableViewCell.init(style: .default, reuseIdentifier: "identifier")
             cell?.backgroundColor = UIColor.clear
             cell?.textLabel?.textColor = UIColor.white
+            cell?.textLabel?.textAlignment = .right
         }
 
-        cell?.textLabel?.text = "cell \(indexPath.row)"
+        let action = self.actions[indexPath.row]
+
+        cell?.textLabel?.text = action.text
 
         return cell!
+    }
+
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let menuAction = self.actions[indexPath.row]
+
+        guard let target = menuAction.target, let action = menuAction.action else {
+            return
+        }
+
+        _ = target.perform(action, with: self)
+
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+
+    private func updateContentInset() {
+        let height = self.tableView.bounds.height
+        let contentSize = self.tableView.contentSize.height
+        let maxTop = max(0.0, height - contentSize)
+        self.tableView.contentInset = UIEdgeInsetsMake(maxTop, 0, 0, 0)
     }
 }

@@ -36,7 +36,7 @@
 static const NSUInteger kShowNClosestStops = 4;
 static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
 
-@interface OBASearchResultsMapViewController ()<MKMapViewDelegate, UISearchBarDelegate>
+@interface OBASearchResultsMapViewController ()<MKMapViewDelegate, UISearchBarDelegate, FloatingMenuDataSource>
 
 // IB UI
 @property(nonatomic,strong) IBOutlet OBAScopeView *scopeView;
@@ -673,27 +673,49 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
 - (FloatingMenuController*)floatingMenu {
     if (!_floatingMenu) {
         _floatingMenu = [[FloatingMenuController alloc] init];
-        [self oba_prepareChildViewController:self.floatingMenu];
+        _floatingMenu.dataSource = self;
     }
     return _floatingMenu;
 }
 
+- (NSArray<FloatingMenuAction *> * _Nullable)rowsFor:(FloatingMenuController * _Nonnull)floatingMenu {
+
+    NSString *mapLabel = nil;
+    UIImage *mapImage = nil;
+    if (self.mapView.mapType == MKMapTypeStandard) {
+        mapLabel = @"Satellite Map";
+        mapImage = [UIImage imageNamed:@"satelliteMapIcon"];
+    }
+    else {
+        mapLabel = @"Standard Map";
+        mapImage = [UIImage imageNamed:@"standardMapIcon"];
+    }
+
+    FloatingMenuAction *mapButton = [[FloatingMenuAction alloc] initWithText:mapLabel image:mapImage target:self action:@selector(toggleMapType:)];
+
+    return @[mapButton];
+}
+
 // More map options such as Satellite views
 // see https://github.com/OneBusAway/onebusaway-iphone/issues/65
-- (IBAction)changeMapTypes:(FloatingButton*)sender {
+- (IBAction)showActionMenu:(FloatingButton*)sender {
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    self.floatingMenu.view.frame = window.bounds;
+    [window addSubview:self.floatingMenu.view];
 
-    self.floatingMenu.view.frame = self.view.bounds;
-    [self.view insertSubview:self.floatingMenu.view belowSubview:sender];
+    self.floatingActionButton.hidden = YES;
+}
 
-    // abxoxo
-//    if (self.mapView.mapType == MKMapTypeStandard) {
-//        self.mapView.mapType = MKMapTypeHybrid;
-//    }
-//    else {
-//        self.mapView.mapType = MKMapTypeStandard;
-//    }
-//    sender.selected = self.mapView.mapType == MKMapTypeHybrid;
-//    [[NSUserDefaults standardUserDefaults] setInteger:self.mapView.mapType forKey:OBAMapSelectedTypeDefaultsKey];
+- (void)toggleMapType:(id)sender {
+    if (self.mapView.mapType == MKMapTypeStandard) {
+        self.mapView.mapType = MKMapTypeHybrid;
+    }
+    else {
+        self.mapView.mapType = MKMapTypeStandard;
+    }
+    [[NSUserDefaults standardUserDefaults] setInteger:self.mapView.mapType forKey:OBAMapSelectedTypeDefaultsKey];
+
+    [self.floatingMenu reloadData];
 }
 
 #pragma mark - OBASearchMapViewController Private Methods

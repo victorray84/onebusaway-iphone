@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OBASearchResultsMapViewController">
             <connections>
+                <outlet property="floatingActionButton" destination="e9c-ip-i0i" id="WSf-Y2-lVT"/>
                 <outlet property="mapView" destination="3" id="9"/>
                 <outlet property="scopeView" destination="79" id="85"/>
                 <outlet property="searchTypeSegmentedControl" destination="80" id="86"/>
@@ -35,7 +36,7 @@
                     </state>
                     <state key="selected" image="satelliteMapIcon"/>
                     <connections>
-                        <action selector="changeMapTypes:" destination="-1" eventType="touchUpInside" id="a8m-Y7-QmD"/>
+                        <action selector="showActionMenu:" destination="-1" eventType="touchUpInside" id="XtN-Fn-TaD"/>
                     </connections>
                 </button>
             </subviews>

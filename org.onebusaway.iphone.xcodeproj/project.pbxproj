@@ -19,6 +19,7 @@
 		930AFE991DD11EF90092AE82 /* OBAWalkableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 930AFE981DD11EF90092AE82 /* OBAWalkableCell.m */; };
 		93132FA11E314ABE00C3792A /* FloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93132FA01E314ABE00C3792A /* FloatingButton.swift */; };
 		93132FA31E314DEB00C3792A /* FloatingMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93132FA21E314DEB00C3792A /* FloatingMenuController.swift */; };
+		93132FA51E31FE1A00C3792A /* FloatingMenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93132FA41E31FE1A00C3792A /* FloatingMenuAction.swift */; };
 		931A6A291E03EAA100131242 /* OBATimelineBarRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 931A6A281E03EAA100131242 /* OBATimelineBarRow.m */; };
 		931A6A2D1E03EAAE00131242 /* OBATimelineBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 931A6A2C1E03EAAE00131242 /* OBATimelineBarCell.m */; };
 		931CED8B1E01E1B600BB0723 /* BTBalloon.m in Sources */ = {isa = PBXBuildFile; fileRef = 931CED881E01E1B600BB0723 /* BTBalloon.m */; };
@@ -273,6 +274,7 @@
 		930AFE981DD11EF90092AE82 /* OBAWalkableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBAWalkableCell.m; sourceTree = "<group>"; };
 		93132FA01E314ABE00C3792A /* FloatingButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingButton.swift; sourceTree = "<group>"; };
 		93132FA21E314DEB00C3792A /* FloatingMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingMenuController.swift; sourceTree = "<group>"; };
+		93132FA41E31FE1A00C3792A /* FloatingMenuAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingMenuAction.swift; sourceTree = "<group>"; };
 		931A6A271E03EAA100131242 /* OBATimelineBarRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBATimelineBarRow.h; sourceTree = "<group>"; };
 		931A6A281E03EAA100131242 /* OBATimelineBarRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBATimelineBarRow.m; sourceTree = "<group>"; };
 		931A6A2B1E03EAAE00131242 /* OBATimelineBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBATimelineBarCell.h; sourceTree = "<group>"; };
@@ -709,6 +711,7 @@
 			children = (
 				93132FA01E314ABE00C3792A /* FloatingButton.swift */,
 				93132FA21E314DEB00C3792A /* FloatingMenuController.swift */,
+				93132FA41E31FE1A00C3792A /* FloatingMenuAction.swift */,
 			);
 			path = floating_action;
 			sourceTree = "<group>";
@@ -1697,6 +1700,7 @@
 			files = (
 				9341978E1DB0C140004BBBB7 /* OBASearchController.m in Sources */,
 				934197EE1DB0C14C004BBBB7 /* SMFloatingLabelTextField.m in Sources */,
+				93132FA51E31FE1A00C3792A /* FloatingMenuAction.swift in Sources */,
 				93132FA11E314ABE00C3792A /* FloatingButton.swift in Sources */,
 				9341981B1DB0C1BA004BBBB7 /* OBAProgressIndicatorView.m in Sources */,
 				9327DEFC1E023BE400502F06 /* OBAArrivalDepartureCell.m in Sources */,
