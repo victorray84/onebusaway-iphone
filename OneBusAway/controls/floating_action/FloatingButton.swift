@@ -1,5 +1,5 @@
 //
-//  OBAFloatingButton.swift
+//  FloatingButton.swift
 //  org.onebusaway.iphone
 //
 //  Created by Alan Chu on 1/6/17.
@@ -9,7 +9,7 @@
 import UIKit
 
 @IBDesignable
-open class OBAFloatingButton: UIButton {
+open class FloatingButton: UIButton {
     override open var intrinsicContentSize: CGSize {
         return CGSize(width: 40, height: 40)
     }
