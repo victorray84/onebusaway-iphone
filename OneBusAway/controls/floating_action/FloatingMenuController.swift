@@ -90,15 +90,27 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
             cell?.backgroundColor = UIColor.clear
             cell?.textLabel?.textColor = UIColor.white
             cell?.textLabel?.textAlignment = .right
+
+            let backgroundView = UIView.init()
+            backgroundView.backgroundColor = UIColor.init(white: 1.0, alpha: 0.3)
+            cell?.selectedBackgroundView = backgroundView
         }
 
         let action = self.actions[indexPath.row]
 
         let imageView = UIImageView.init(image: action.image)
-        imageView.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
         imageView.tintColor = UIColor.white
         imageView.contentMode = .scaleAspectFit
-        cell?.accessoryView = imageView
+
+        let accessoryView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 38, height: 32))
+        accessoryView.addSubview(imageView)
+        imageView.snp.makeConstraints { (make) -> Void in
+            make.center.equalToSuperview()
+            make.width.lessThanOrEqualToSuperview()
+            make.height.lessThanOrEqualToSuperview()
+        }
+
+        cell?.accessoryView = accessoryView
         cell?.textLabel?.text = action.text
 
         return cell!
