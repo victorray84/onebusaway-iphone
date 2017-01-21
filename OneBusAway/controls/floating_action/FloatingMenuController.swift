@@ -29,7 +29,12 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
         return tableView
     }()
 
-    private var floatingActionButton = FloatingButton.init(frame: CGRect.zero)
+    private var floatingActionButton: FloatingButton = {
+        let button = FloatingButton.init(frame: CGRect.zero)
+        button.setTitle("Close", for: .normal)
+        button.addTarget(self, action: #selector(closeMenu), for: .touchUpInside)
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,6 +61,13 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.updateContentInset()
+    }
+
+
+    // MARK: - Display
+
+    func closeMenu() {
+        self.dismiss(animated: true, completion: nil)
     }
 
     // MARK: - Data Loading

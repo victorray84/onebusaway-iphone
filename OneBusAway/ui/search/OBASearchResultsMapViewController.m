@@ -674,12 +674,12 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
     if (!_floatingMenu) {
         _floatingMenu = [[FloatingMenuController alloc] init];
         _floatingMenu.dataSource = self;
+        _floatingMenu.modalPresentationStyle = UIModalPresentationOverFullScreen;
     }
     return _floatingMenu;
 }
 
 - (NSArray<FloatingMenuAction *> * _Nullable)rowsFor:(FloatingMenuController * _Nonnull)floatingMenu {
-
     NSString *mapLabel = nil;
     UIImage *mapImage = nil;
     if (self.mapView.mapType == MKMapTypeStandard) {
@@ -699,9 +699,9 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
 // More map options such as Satellite views
 // see https://github.com/OneBusAway/onebusaway-iphone/issues/65
 - (IBAction)showActionMenu:(FloatingButton*)sender {
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-    self.floatingMenu.view.frame = window.bounds;
-    [window addSubview:self.floatingMenu.view];
+//    self.modalPresentationStyle = UIModalPresentationCurrentContext;
+
+    [self presentViewController:self.floatingMenu animated:YES completion:nil];
 
     self.floatingActionButton.hidden = YES;
 }
