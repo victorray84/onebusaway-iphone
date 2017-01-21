@@ -31,7 +31,8 @@
                 </mapView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e9c-ip-i0i" customClass="FloatingButton" customModule="OneBusAway" customModuleProvider="target">
                     <rect key="frame" x="264" y="376" width="40" height="40"/>
-                    <state key="normal" image="standardMapIcon">
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <state key="normal" title="Menu">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <state key="selected" image="satelliteMapIcon"/>
@@ -79,7 +80,6 @@
     </objects>
     <resources>
         <image name="satelliteMapIcon" width="144" height="144"/>
-        <image name="standardMapIcon" width="144" height="144"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

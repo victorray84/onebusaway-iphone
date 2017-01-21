@@ -45,12 +45,12 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
         self.view.addSubview(self.tableView)
 
         self.floatingActionButton.snp.makeConstraints { (make) -> Void in
-            make.right.equalTo(self.view).inset(20)
-            make.bottom.equalTo(self.view).inset(60)
+            make.right.equalTo(self.view).inset(16)
+            make.bottom.equalTo(self.view).inset(64)
         }
 
         self.tableView.snp.makeConstraints { (make) -> Void in
-            make.bottom.equalTo(self.floatingActionButton.snp.top).offset(OBATheme.defaultPadding())
+            make.bottom.equalTo(self.floatingActionButton.snp.top).offset(-2 * OBATheme.defaultPadding())
             make.width.equalToSuperview()
             make.top.equalToSuperview()
         }
@@ -62,7 +62,6 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLayoutSubviews()
         self.updateContentInset()
     }
-
 
     // MARK: - Display
 
@@ -95,6 +94,11 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
 
         let action = self.actions[indexPath.row]
 
+        let imageView = UIImageView.init(image: action.image)
+        imageView.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
+        imageView.tintColor = UIColor.white
+        imageView.contentMode = .scaleAspectFit
+        cell?.accessoryView = imageView
         cell?.textLabel?.text = action.text
 
         return cell!

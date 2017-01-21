@@ -675,6 +675,7 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
         _floatingMenu = [[FloatingMenuController alloc] init];
         _floatingMenu.dataSource = self;
         _floatingMenu.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        _floatingMenu.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     }
     return _floatingMenu;
 }
@@ -699,11 +700,7 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
 // More map options such as Satellite views
 // see https://github.com/OneBusAway/onebusaway-iphone/issues/65
 - (IBAction)showActionMenu:(FloatingButton*)sender {
-//    self.modalPresentationStyle = UIModalPresentationCurrentContext;
-
     [self presentViewController:self.floatingMenu animated:YES completion:nil];
-
-    self.floatingActionButton.hidden = YES;
 }
 
 - (void)toggleMapType:(id)sender {
