@@ -109,7 +109,6 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
     // Configure the default map display style
     // see https://github.com/OneBusAway/onebusaway-iphone/issues/65
     self.mapView.mapType = [[NSUserDefaults standardUserDefaults] integerForKey:OBAMapSelectedTypeDefaultsKey];
-    self.floatingActionButton.selected = self.mapView.mapType == MKMapTypeHybrid;
 
     self.hideFutureNetworkErrors = NO;
 

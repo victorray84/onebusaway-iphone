@@ -35,7 +35,7 @@
                     <state key="normal" title="Menu">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="satelliteMapIcon"/>
+                    <state key="selected" title="Menu"/>
                     <connections>
                         <action selector="showActionMenu:" destination="-1" eventType="touchUpInside" id="XtN-Fn-TaD"/>
                     </connections>
@@ -78,9 +78,6 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
     </objects>
-    <resources>
-        <image name="satelliteMapIcon" width="144" height="144"/>
-    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
