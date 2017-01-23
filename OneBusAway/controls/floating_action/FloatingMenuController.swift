@@ -15,7 +15,6 @@ import UIKit
 
 class FloatingMenuController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     private var actions: [FloatingMenuAction] = []
-
     public weak var dataSource: FloatingMenuDataSource?
 
     private lazy var tableView: UITableView = {
@@ -54,8 +53,8 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
         self.view.addSubview(self.tableView)
 
         self.floatingActionButton.snp.makeConstraints { (make) -> Void in
-            make.right.equalTo(self.view).inset(16)
-            make.bottom.equalTo(self.view).inset(64)
+            make.right.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(64)
         }
 
         self.tableView.snp.makeConstraints { (make) -> Void in

@@ -34,7 +34,7 @@ static NSTimeInterval const kRefreshTimeInterval = 30.0;
 static CGFloat const kTableHeaderHeight = 150.f;
 static NSInteger kStopsSectionTag = 101;
 
-@interface OBAStopViewController ()<UIScrollViewDelegate, UIActivityItemSource>
+@interface OBAStopViewController ()<UIScrollViewDelegate, UIActivityItemSource, FloatingMenuDataSource>
 @property(nonatomic,strong) UIRefreshControl *refreshControl;
 @property(nonatomic,strong) NSTimer *refreshTimer;
 @property(nonatomic,strong) NSLock *reloadLock;
@@ -44,7 +44,10 @@ static NSInteger kStopsSectionTag = 101;
 @property(nonatomic,strong) OBAStopTableHeaderView *stopHeaderView;
 @property(nonatomic,strong) NSTimer *apptentiveTimer;
 @property(nonatomic,strong) GKActionSheetPicker *actionSheetPicker;
+
+// FAB Menu
 @property(nonatomic,strong) FloatingButton *FABMenuButton;
+@property(nonatomic,strong) FloatingMenuController *floatingMenu;
 @end
 
 @implementation OBAStopViewController
@@ -183,11 +186,75 @@ static NSInteger kStopsSectionTag = 101;
 
 - (void)createFABMenu {
     self.FABMenuButton = [[FloatingButton alloc] init];
+    [self.FABMenuButton addTarget:self action:@selector(showFABMenu) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.FABMenuButton];
     [self.FABMenuButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.mas_bottomLayoutGuideTop).offset(-20);
-        make.right.equalTo(self.view).offset(-20);
+        CGFloat offset = -20.f;
+        make.bottom.equalTo(self.mas_bottomLayoutGuideTop).offset(offset);
+        make.right.equalTo(self.view).offset(offset);
     }];
+}
+
+- (void)showFABMenu {
+    [self presentViewController:self.floatingMenu animated:YES completion:nil];
+}
+
+- (FloatingMenuController*)floatingMenu {
+    if (!_floatingMenu) {
+        _floatingMenu = [FloatingMenuController floatingMenuWithDataSource:self];
+    }
+    return _floatingMenu;
+}
+
+- (NSArray<FloatingMenuAction*>*)rowsFor:(FloatingMenuController*)floatingMenu {
+//    NSString *mapLabel = nil;
+//    UIImage *mapImage = nil;
+//    if (self.mapView.mapType == MKMapTypeStandard) {
+//        mapLabel = @"Satellite Map";
+//        mapImage = [UIImage imageNamed:@"satelliteMapIcon"];
+//    }
+//    else {
+//        mapLabel = @"Standard Map";
+//        mapImage = [UIImage imageNamed:@"standardMapIcon"];
+//    }
+//
+//    FloatingMenuAction *mapButton = [[FloatingMenuAction alloc] initWithText:mapLabel image:mapImage target:self action:@selector(toggleMapType:)];
+//
+//    return @[mapButton];
+
+    FloatingMenuAction *addBookmark = [[FloatingMenuAction alloc] initWithText:@"Add Bookmark" image:[UIImage imageNamed:@"Favorites"] target:self action:@selector(fabAddBookmark)];
+
+    FloatingMenuAction *remindMe = [[FloatingMenuAction alloc] initWithText:@"Remind Me About Departure" image:[UIImage imageNamed:@"bell"] target:self action:@selector(fabRemindMe)];
+
+    FloatingMenuAction *shareTrip = [[FloatingMenuAction alloc] initWithText:@"Share Trip" image:[UIImage imageNamed:@"share"] target:self action:@selector(fabShareTrip)];
+
+    FloatingMenuAction *reportProblem = [[FloatingMenuAction alloc] initWithText:@"Report a Problem" image:nil target:self action:@selector(fabReportProblem)];
+
+    FloatingMenuAction *sortBy = [[FloatingMenuAction alloc] initWithText:@"Sort by {ROUTE|TIME}" image:nil target:self action:@selector(fabSortBy)];
+
+    return @[addBookmark, remindMe, shareTrip, reportProblem, sortBy];
+}
+
+#pragma mark - FAB Actions
+
+- (void)fabAddBookmark {
+    //
+}
+
+- (void)fabRemindMe {
+    //
+}
+
+- (void)fabShareTrip {
+    //
+}
+
+- (void)fabReportProblem {
+    //
+}
+
+- (void)fabSortBy {
+    //
 }
 
 #pragma mark - Data Loading

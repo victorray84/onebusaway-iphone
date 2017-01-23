@@ -9,12 +9,12 @@
 import UIKit
 
 class FloatingMenuAction: NSObject {
-    public var image: UIImage
+    public var image: UIImage?
     public var text: String
     public weak var target: AnyObject?
     public var action: Selector?
 
-    init(text: String, image: UIImage, target: AnyObject?, action: Selector?) {
+    init(text: String, image: UIImage?, target: AnyObject?, action: Selector?) {
         self.image = image
         self.text = text
         self.target = target
