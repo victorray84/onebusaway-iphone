@@ -10,6 +10,7 @@
 @import OBAKit;
 @import PromiseKit;
 @import SVProgressHUD;
+@import Masonry;
 #import "OneBusAway-Swift.h"
 #import "OBASeparatorSectionView.h"
 #import "OBAReportProblemWithRecentTripsViewController.h"
@@ -18,7 +19,6 @@
 #import "OBAEditStopBookmarkViewController.h"
 #import "OBADepartureRow.h"
 #import "OBAAnalytics.h"
-#import "OBALabelFooterView.h"
 #import "OBASegmentedRow.h"
 #import "OBAArrivalAndDepartureViewController.h"
 #import "OBAStaticTableViewController+Builders.h"
@@ -44,6 +44,7 @@ static NSInteger kStopsSectionTag = 101;
 @property(nonatomic,strong) OBAStopTableHeaderView *stopHeaderView;
 @property(nonatomic,strong) NSTimer *apptentiveTimer;
 @property(nonatomic,strong) GKActionSheetPicker *actionSheetPicker;
+@property(nonatomic,strong) FloatingButton *FABMenuButton;
 @end
 
 @implementation OBAStopViewController
@@ -85,6 +86,8 @@ static NSInteger kStopsSectionTag = 101;
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(reloadData:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:self.refreshControl];
+
+    [self createFABMenu];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -174,6 +177,17 @@ static NSInteger kStopsSectionTag = 101;
         _routeFilter = [[OBARouteFilter alloc] initWithStopPreferences:self.stopPreferences];
     }
     return _routeFilter;
+}
+
+#pragma mark - FAB Menu
+
+- (void)createFABMenu {
+    self.FABMenuButton = [[FloatingButton alloc] init];
+    [self.view addSubview:self.FABMenuButton];
+    [self.FABMenuButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.mas_bottomLayoutGuideTop).offset(-20);
+        make.right.equalTo(self.view).offset(-20);
+    }];
 }
 
 #pragma mark - Data Loading
