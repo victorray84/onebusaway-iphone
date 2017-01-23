@@ -36,6 +36,15 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
         return button
     }()
 
+    class func floatingMenu(dataSource: FloatingMenuDataSource) -> FloatingMenuController {
+        let menu = FloatingMenuController.init()
+        menu.dataSource = dataSource
+        menu.modalPresentationStyle = .overFullScreen
+        menu.modalTransitionStyle = .crossDissolve
+
+        return menu
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -27,6 +27,8 @@ open class FloatingButton: UIButton {
     public func configure() {
         self.backgroundColor = OBATheme.color(withRed: 247, green: 245, blue: 247, alpha: 1.0)
 
+        self.setTitleColor(UIColor.black, for: .normal)
+
         self.showsTouchWhenHighlighted = true
         self.reversesTitleShadowWhenHighlighted = true
 
