@@ -131,9 +131,11 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
             return
         }
 
-        _ = target.perform(action, with: self)
+        tableView.deselectRow(at: indexPath, animated: false)
 
-        tableView.deselectRow(at: indexPath, animated: true)
+        self.dismiss(animated: true) { 
+            _ = target.perform(action, with: self)
+        }
     }
 
     private func updateContentInset() {

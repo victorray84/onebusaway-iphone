@@ -222,13 +222,13 @@ static NSInteger kStopsSectionTag = 101;
 //
 //    return @[mapButton];
 
-    FloatingMenuAction *addBookmark = [[FloatingMenuAction alloc] initWithText:@"Add Bookmark" image:[UIImage imageNamed:@"Favorites"] target:self action:@selector(fabAddBookmark)];
+    FloatingMenuAction *addBookmark = [[FloatingMenuAction alloc] initWithText:NSLocalizedString(@"msg_add_bookmark", @"") image:[UIImage imageNamed:@"Favorites"] target:self action:@selector(fabAddBookmark)];
 
     FloatingMenuAction *remindMe = [[FloatingMenuAction alloc] initWithText:@"Remind Me About Departure" image:[UIImage imageNamed:@"bell"] target:self action:@selector(fabRemindMe)];
 
     FloatingMenuAction *shareTrip = [[FloatingMenuAction alloc] initWithText:@"Share Trip" image:[UIImage imageNamed:@"share"] target:self action:@selector(fabShareTrip)];
 
-    FloatingMenuAction *reportProblem = [[FloatingMenuAction alloc] initWithText:@"Report a Problem" image:nil target:self action:@selector(fabReportProblem)];
+    FloatingMenuAction *reportProblem = [[FloatingMenuAction alloc] initWithText:NSLocalizedString(@"msg_report_a_problem", @"") image:nil target:self action:@selector(fabReportProblem)];
 
     FloatingMenuAction *sortBy = [[FloatingMenuAction alloc] initWithText:@"Sort by {ROUTE|TIME}" image:nil target:self action:@selector(fabSortBy)];
 
@@ -238,7 +238,9 @@ static NSInteger kStopsSectionTag = 101;
 #pragma mark - FAB Actions
 
 - (void)fabAddBookmark {
-    //
+    OBABookmarkRouteDisambiguationViewController *disambiguator = [[OBABookmarkRouteDisambiguationViewController alloc] initWithArrivalsAndDeparturesForStop:self.arrivalsAndDepartures];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:disambiguator];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (void)fabRemindMe {
@@ -250,7 +252,10 @@ static NSInteger kStopsSectionTag = 101;
 }
 
 - (void)fabReportProblem {
-    //
+    NSString *stopID = self.arrivalsAndDepartures.stopId;
+    OBAReportProblemWithRecentTripsViewController * vc = [[OBAReportProblemWithRecentTripsViewController alloc] initWithStopID:stopID];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (void)fabSortBy {
@@ -705,15 +710,6 @@ static NSInteger kStopsSectionTag = 101;
 - (OBATableSection*)createActionSectionWithStop:(OBAStopV2*)stop modelDAO:(OBAModelDAO*)modelDAO {
     NSMutableArray *actionRows = [[NSMutableArray alloc] init];
 
-    // Add to Bookmarks
-    NSString *bookmarksTitle = NSLocalizedString(@"msg_add_bookmark", @"");
-    OBATableRow *addToBookmarks = [[OBATableRow alloc] initWithTitle:bookmarksTitle action:^{
-        OBABookmarkRouteDisambiguationViewController *disambiguator = [[OBABookmarkRouteDisambiguationViewController alloc] initWithArrivalsAndDeparturesForStop:self.arrivalsAndDepartures];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:disambiguator];
-        [self presentViewController:nav animated:YES completion:nil];
-    }];
-    [actionRows addObject:addToBookmarks];
-
     // Nearby Stops
     OBATableRow *nearbyStops = [[OBATableRow alloc] initWithTitle:NSLocalizedString(@"msg_nearby_stops",) action:^{
         NearbyStopsViewController *nearby = [[NearbyStopsViewController alloc] initWithStop:self.arrivalsAndDepartures.stop];
@@ -721,14 +717,6 @@ static NSInteger kStopsSectionTag = 101;
     }];
     nearbyStops.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [actionRows addObject:nearbyStops];
-
-    // Report a Problem
-    OBATableRow *problem = [[OBATableRow alloc] initWithTitle:NSLocalizedString(@"msg_report_a_problem", @"") action:^{
-        OBAReportProblemWithRecentTripsViewController * vc = [[OBAReportProblemWithRecentTripsViewController alloc] initWithStopID:stop.stopId];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-        [self presentViewController:nav animated:YES completion:nil];
-    }];
-    [actionRows addObject:problem];
 
     // Filter/Sort Arrivals
     OBATableRow *filter = [[OBATableRow alloc] initWithTitle:NSLocalizedString(@"msg_sort_and_filter_routes",) action:^{
