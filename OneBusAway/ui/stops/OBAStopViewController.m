@@ -197,6 +197,35 @@ static NSInteger kStopsSectionTag = 101;
 
 - (void)showFABMenu {
     [self presentViewController:self.floatingMenu animated:YES completion:nil];
+
+    // abxoxo - test bed for animating cell changes.
+
+//    NSMutableIndexSet *deletedSections = [[NSMutableIndexSet alloc] init];
+//    OBATableSection *stopsSection = nil;
+//
+//    for (NSUInteger i=0;i<self.sections.count;i++) {
+//        OBATableSection *section = self.sections[i];
+//        if (section.tag == kStopsSectionTag) {
+//            stopsSection = section;
+//            continue;
+//        }
+//
+//        [deletedSections addIndex:i];
+//    }
+//
+//    self.sections = @[stopsSection];
+//
+//    CGRect stopHeaderRect = self.self.tableView.tableHeaderView.frame;
+//
+//    [OBAAnimation performAnimations:^{
+//        self.tableView.tableHeaderView.frame = CGRectMake(0, 0, 0, 0);
+//        self.tableView.tableHeaderView.alpha = 0.f;
+//        [self.tableView deleteSections:deletedSections withRowAnimation:UITableViewRowAnimationAutomatic];
+//    } completion:^(BOOL finished) {
+//        self.tableView.tableHeaderView = nil;
+//        self.stopHeaderView.frame = stopHeaderRect;
+//        self.stopHeaderView.alpha = 1.f;
+//    }];
 }
 
 - (FloatingMenuController*)floatingMenu {
@@ -244,7 +273,7 @@ static NSInteger kStopsSectionTag = 101;
 }
 
 - (void)fabRemindMe {
-    //
+
 }
 
 - (void)fabShareTrip {

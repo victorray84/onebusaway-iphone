@@ -17,6 +17,8 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
     private var actions: [FloatingMenuAction] = []
     public weak var dataSource: FloatingMenuDataSource?
 
+    private var backgroundEffectView: UIVisualEffectView?
+
     private lazy var tableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.zero)
         tableView.dataSource = self
@@ -38,7 +40,7 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
     class func floatingMenu(dataSource: FloatingMenuDataSource) -> FloatingMenuController {
         let menu = FloatingMenuController.init()
         menu.dataSource = dataSource
-        menu.modalPresentationStyle = .overFullScreen
+        menu.modalPresentationStyle = .overCurrentContext
         menu.modalTransitionStyle = .crossDissolve
 
         return menu
@@ -47,10 +49,19 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = UIColor.init(white: 0.0, alpha: 0.5)
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(blurEffectView)
+        self.backgroundEffectView = blurEffectView
 
-        self.view.addSubview(self.floatingActionButton)
-        self.view.addSubview(self.tableView)
+//        self.view.backgroundColor = UIColor.init(white: 0.0, alpha: 0.8)
+
+        self.backgroundEffectView?.contentView.addSubview(self.floatingActionButton)
+//        self.view.addSubview(self.floatingActionButton)
+//        self.view.addSubview(self.tableView)
+        self.backgroundEffectView?.contentView.addSubview(self.tableView)
 
         self.floatingActionButton.snp.makeConstraints { (make) -> Void in
             make.right.equalToSuperview().inset(16)
