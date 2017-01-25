@@ -17,7 +17,6 @@ NSTimeInterval const OBALongAnimationDuration = 2.0;
 }
 
 + (void)performAnimations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion {
-//    [UIView animateWithDuration:[UIView inheritedAnimationDuration] animations:animations completion:completion];
     [UIView animateWithDuration:[UIView inheritedAnimationDuration] animations:animations completion:completion];
 }
 

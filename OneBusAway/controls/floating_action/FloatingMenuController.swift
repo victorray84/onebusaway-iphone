@@ -13,11 +13,20 @@ import UIKit
     func rowsFor(_ floatingMenu: FloatingMenuController) -> [FloatingMenuAction]?
 }
 
-class FloatingMenuController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class FloatingMenuController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIViewControllerTransitioningDelegate {
+
+    static let blurStyle: UIBlurEffectStyle = .dark
+
     private var actions: [FloatingMenuAction] = []
     public weak var dataSource: FloatingMenuDataSource?
 
-    private var backgroundEffectView: UIVisualEffectView?
+    public lazy var backgroundEffectView: UIVisualEffectView = {
+        let blur = UIBlurEffect(style: blurStyle)
+        let effectView = UIVisualEffectView(effect: blur)
+        effectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        return effectView
+    }()
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.zero)
@@ -40,8 +49,12 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
     class func floatingMenu(dataSource: FloatingMenuDataSource) -> FloatingMenuController {
         let menu = FloatingMenuController.init()
         menu.dataSource = dataSource
-        menu.modalPresentationStyle = .overCurrentContext
         menu.modalTransitionStyle = .crossDissolve
+        menu.providesPresentationContextTransitionStyle = true
+        menu.definesPresentationContext = true
+        menu.modalPresentationStyle = .overFullScreen
+        //         menu.modalPresentationStyle = .overCurrentContext ???
+        menu.transitioningDelegate = menu
 
         return menu
     }
@@ -49,19 +62,11 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let blurEffect = UIBlurEffect(style: .light)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(blurEffectView)
-        self.backgroundEffectView = blurEffectView
+        self.backgroundEffectView.frame = self.view.bounds
+        self.view.addSubview(self.backgroundEffectView)
 
-//        self.view.backgroundColor = UIColor.init(white: 0.0, alpha: 0.8)
-
-        self.backgroundEffectView?.contentView.addSubview(self.floatingActionButton)
-//        self.view.addSubview(self.floatingActionButton)
-//        self.view.addSubview(self.tableView)
-        self.backgroundEffectView?.contentView.addSubview(self.tableView)
+        self.backgroundEffectView.contentView.addSubview(self.floatingActionButton)
+        self.backgroundEffectView.contentView.addSubview(self.tableView)
 
         self.floatingActionButton.snp.makeConstraints { (make) -> Void in
             make.right.equalToSuperview().inset(16)
@@ -154,5 +159,62 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
         let contentSize = self.tableView.contentSize.height
         let maxTop = max(0.0, height - contentSize)
         self.tableView.contentInset = UIEdgeInsetsMake(maxTop, 0, 0, 0)
+    }
+
+    // MARK: - UIViewControllerTransitioningDelegate
+
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return PresentAnimation.init()
+    }
+
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return DismissAnimation.init();
+    }
+}
+
+class PresentAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return UIView.inheritedAnimationDuration
+    }
+
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        guard let toController: FloatingMenuController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to) as? FloatingMenuController else {
+            return;
+        }
+
+        let container = transitionContext.containerView
+        container.addSubview(toController.view)
+
+        toController.backgroundEffectView.effect = nil
+        UIView.animate(withDuration: UIView.inheritedAnimationDuration, animations: {
+            toController.backgroundEffectView.effect = UIBlurEffect(style: FloatingMenuController.blurStyle)
+        }) { (complete) in
+            transitionContext.completeTransition(complete)
+        }
+    }
+}
+
+class DismissAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return UIView.inheritedAnimationDuration
+    }
+
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        guard let fromController: FloatingMenuController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from) as? FloatingMenuController else {
+            return
+        }
+
+        guard let toView = transitionContext.view(forKey: UITransitionContextViewKey.to) else {
+            return
+        }
+
+        let container = transitionContext.containerView
+        container.addSubview(toView)
+
+        UIView.animate(withDuration: UIView.inheritedAnimationDuration, animations: {
+            fromController.backgroundEffectView.effect = nil
+        }) { (complete) in
+            transitionContext.completeTransition(complete)
+        }
     }
 }
