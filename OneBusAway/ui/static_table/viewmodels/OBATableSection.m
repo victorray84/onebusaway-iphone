@@ -38,6 +38,20 @@
     return self;
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    OBATableSection *section = [[self.class alloc] init];
+    section->_title = [_title copyWithZone:zone];
+    section->_rows = [_rows mutableCopyWithZone:zone];
+    section->_headerView = _headerView;
+    section->_footerView = _footerView;
+    section->_model = _model;
+    section->_tag = _tag;
+
+    return section;
+}
+
 #pragma mark - Rows
 
 - (void)setRows:(NSArray *)rows {

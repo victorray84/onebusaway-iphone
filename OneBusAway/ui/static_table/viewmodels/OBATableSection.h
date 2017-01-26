@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OBATableSection : NSObject
+@interface OBATableSection : NSObject<NSCopying>
 
 /**
  Title of the table section

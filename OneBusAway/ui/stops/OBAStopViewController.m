@@ -196,36 +196,61 @@ static NSInteger kStopsSectionTag = 101;
 }
 
 - (void)showFABMenu {
-    [self presentViewController:self.floatingMenu animated:YES completion:nil];
+//    [self presentViewController:self.floatingMenu animated:YES completion:nil];
 
     // abxoxo - test bed for animating cell changes.
 
-//    NSMutableIndexSet *deletedSections = [[NSMutableIndexSet alloc] init];
-//    OBATableSection *stopsSection = nil;
-//
-//    for (NSUInteger i=0;i<self.sections.count;i++) {
-//        OBATableSection *section = self.sections[i];
-//        if (section.tag == kStopsSectionTag) {
-//            stopsSection = section;
-//            continue;
-//        }
-//
-//        [deletedSections addIndex:i];
-//    }
-//
-//    self.sections = @[stopsSection];
-//
-//    CGRect stopHeaderRect = self.self.tableView.tableHeaderView.frame;
-//
-//    [OBAAnimation performAnimations:^{
-//        self.tableView.tableHeaderView.frame = CGRectMake(0, 0, 0, 0);
-//        self.tableView.tableHeaderView.alpha = 0.f;
-//        [self.tableView deleteSections:deletedSections withRowAnimation:UITableViewRowAnimationAutomatic];
-//    } completion:^(BOOL finished) {
-//        self.tableView.tableHeaderView = nil;
-//        self.stopHeaderView.frame = stopHeaderRect;
-//        self.stopHeaderView.alpha = 1.f;
-//    }];
+    NSMutableIndexSet *deletedSections = [[NSMutableIndexSet alloc] init];
+    OBATableSection *stopsSection = nil;
+    NSUInteger stopsSectionIndex = NSNotFound;
+
+    for (NSUInteger i=0;i<self.sections.count;i++) {
+        OBATableSection *section = self.sections[i];
+        if (section.tag == kStopsSectionTag) {
+            stopsSection = [section copy];
+            stopsSectionIndex = i;
+            continue;
+        }
+
+        [deletedSections addIndex:i];
+    }
+
+    NSIndexPath *walkableIndexPath = nil;
+
+    NSUInteger walkableIndex = [stopsSection.rows indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isKindOfClass:[OBAWalkableRow class]]) {
+            *stop = YES;
+            return YES;
+        }
+        else {
+            return NO;
+        }
+    }];
+
+    if (walkableIndex != NSNotFound) {
+        walkableIndexPath = [NSIndexPath indexPathForRow:walkableIndex inSection:stopsSectionIndex];
+        [stopsSection removeRowAtIndex:walkableIndex];
+    }
+
+    self.sections = @[stopsSection];
+
+    CGRect stopHeaderRect = self.self.tableView.tableHeaderView.frame;
+
+    [self.tableView beginUpdates];
+
+    [OBAAnimation performAnimations:^{
+        self.tableView.tableHeaderView.frame = CGRectMake(0, 0, 0, 0);
+        self.tableView.tableHeaderView.alpha = 0.f;
+        if (walkableIndexPath) {
+            [self.tableView deleteRowsAtIndexPaths:@[walkableIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
+        [self.tableView deleteSections:deletedSections withRowAnimation:UITableViewRowAnimationAutomatic];
+    } completion:^(BOOL finished) {
+        self.tableView.tableHeaderView = nil;
+        self.stopHeaderView.frame = stopHeaderRect;
+        self.stopHeaderView.alpha = 1.f;
+        [self.tableView endUpdates];
+    }];
 }
 
 - (FloatingMenuController*)floatingMenu {
