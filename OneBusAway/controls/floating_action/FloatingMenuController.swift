@@ -53,7 +53,6 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
         menu.providesPresentationContextTransitionStyle = true
         menu.definesPresentationContext = true
         menu.modalPresentationStyle = .overFullScreen
-        //         menu.modalPresentationStyle = .overCurrentContext ???
         menu.transitioningDelegate = menu
 
         return menu
@@ -203,14 +202,6 @@ class DismissAnimation: NSObject, UIViewControllerAnimatedTransitioning {
         guard let fromController: FloatingMenuController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from) as? FloatingMenuController else {
             return
         }
-
-        guard let toView = transitionContext.view(forKey: UITransitionContextViewKey.to) else {
-            return
-        }
-
-        let container = transitionContext.containerView
-        container.addSubview(toView)
-
         UIView.animate(withDuration: UIView.inheritedAnimationDuration, animations: {
             fromController.backgroundEffectView.effect = nil
         }) { (complete) in
