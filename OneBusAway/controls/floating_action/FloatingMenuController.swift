@@ -68,8 +68,8 @@ class FloatingMenuController: UIViewController, UITableViewDataSource, UITableVi
         self.backgroundEffectView.contentView.addSubview(self.tableView)
 
         self.floatingActionButton.snp.makeConstraints { (make) -> Void in
-            make.right.equalToSuperview().inset(16)
-            make.bottom.equalToSuperview().inset(64)
+            make.right.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(69)
         }
 
         self.tableView.snp.makeConstraints { (make) -> Void in
