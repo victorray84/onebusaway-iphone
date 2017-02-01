@@ -74,6 +74,8 @@ typedef NS_ENUM(NSUInteger, OBARootViewStyle) {
 - (nullable NSIndexPath*)indexPathForModel:(id)model;
 
 - (BOOL)replaceRowAtIndexPath:(NSIndexPath*)indexPath withRow:(OBABaseRow*)row;
+
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
 NS_ASSUME_NONNULL_END

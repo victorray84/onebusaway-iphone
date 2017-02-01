@@ -11,5 +11,5 @@
 #import "AFMSlidingCell.h"
 
 @interface OBAClassicDepartureCell : AFMSlidingCell<OBATableCell>
-
+@property(nonatomic,assign) BOOL expanded;
 @end

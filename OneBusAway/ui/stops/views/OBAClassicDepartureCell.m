@@ -19,6 +19,9 @@ static CGFloat const kSwipeButtonWidth = 80.f;
 @property(nonatomic,strong,readonly) UIButton *bookmarkButton;
 @property(nonatomic,strong,readonly) UIButton *alarmButton;
 @property(nonatomic,strong,readonly) UIButton *shareButton;
+
+@property(nonatomic,strong) UIStackView *buttonStack;
+@property(nonatomic,strong) UIStackView *mainStack;
 @end
 
 @implementation OBAClassicDepartureCell
@@ -30,51 +33,75 @@ static CGFloat const kSwipeButtonWidth = 80.f;
     if (self) {
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         _departureView = [[OBAClassicDepartureView alloc] initWithFrame:CGRectZero];
-        [self.contentView addSubview:_departureView];
 
-        [_departureView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.contentView).insets(self.layoutMargins);
+        _buttonStack = [self buildButtonStack];
+
+        _mainStack = [[UIStackView alloc] initWithArrangedSubviews:@[_departureView, _buttonStack]];
+        _mainStack.axis = UILayoutConstraintAxisVertical;
+
+        [self.contentView addSubview:_mainStack];
+        [_mainStack mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.contentView);
         }];
 
-        _bookmarkButton = ({
-            UIButton *button = [OBAStackedButton buttonWithType:UIButtonTypeSystem];
-            [button addTarget:self action:@selector(toggleBookmark) forControlEvents:UIControlEventTouchUpInside];
-            button.titleLabel.font = [OBATheme footnoteFont];
-            [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [button setImage:[UIImage imageNamed:@"Favorites"] forState:UIControlStateNormal];
-            button.tintColor = [UIColor blackColor];
-
-            button;
-        });
-
-        _alarmButton = ({
-            UIButton *button = [OBAStackedButton buttonWithType:UIButtonTypeSystem];
-            [button addTarget:self action:@selector(toggleAlarm) forControlEvents:UIControlEventTouchUpInside];
-            button.titleLabel.font = [OBATheme footnoteFont];
-            [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [button setImage:[UIImage imageNamed:@"bell"] forState:UIControlStateNormal];
-            button.tintColor = [UIColor blackColor];
-            [button setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
-            button;
-        });
-
-        _shareButton = ({
-            UIButton *button = [OBAStackedButton buttonWithType:UIButtonTypeSystem];
-            [button setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
-            [button setTitle:NSLocalizedString(@"msg_share",) forState:UIControlStateNormal];
-            button.backgroundColor = [UIColor lightGrayColor];
-            [button addTarget:self action:@selector(shareDeparture) forControlEvents:UIControlEventTouchUpInside];
-            [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            button.titleLabel.font = [OBATheme footnoteFont];
-            button.tintColor = [UIColor blackColor];
-
-            button;
-        });
-
-        [self addButtonsToContextMenu];
+//        [self addButtonsToContextMenu];
     }
 
     return self;
+}
+
+- (UIStackView*)buildButtonStack {
+    _bookmarkButton = ({
+        UIButton *button = [OBAStackedButton buttonWithType:UIButtonTypeSystem];
+        [button addTarget:self action:@selector(toggleBookmark) forControlEvents:UIControlEventTouchUpInside];
+        button.titleLabel.font = [OBATheme footnoteFont];
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"Favorites"] forState:UIControlStateNormal];
+        button.tintColor = [UIColor blackColor];
+
+        button;
+    });
+
+    _alarmButton = ({
+        UIButton *button = [OBAStackedButton buttonWithType:UIButtonTypeSystem];
+        [button addTarget:self action:@selector(toggleAlarm) forControlEvents:UIControlEventTouchUpInside];
+        button.titleLabel.font = [OBATheme footnoteFont];
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"bell"] forState:UIControlStateNormal];
+        button.tintColor = [UIColor blackColor];
+        [button setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+        button;
+    });
+
+    _shareButton = ({
+        UIButton *button = [OBAStackedButton buttonWithType:UIButtonTypeSystem];
+        [button setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+        [button setTitle:NSLocalizedString(@"msg_share",) forState:UIControlStateNormal];
+        button.backgroundColor = [UIColor lightGrayColor];
+        [button addTarget:self action:@selector(shareDeparture) forControlEvents:UIControlEventTouchUpInside];
+        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        button.titleLabel.font = [OBATheme footnoteFont];
+        button.tintColor = [UIColor blackColor];
+
+        button;
+    });
+
+    UIStackView *stackView = [[UIStackView alloc] initWithArrangedSubviews:@[_bookmarkButton, _alarmButton, _shareButton]];
+    stackView.axis = UILayoutConstraintAxisVertical;
+
+    [_bookmarkButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.greaterThanOrEqualTo(@30);
+    }];
+
+    [_alarmButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.greaterThanOrEqualTo(@30);
+    }];
+
+    [_shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.greaterThanOrEqualTo(@30);
+    }];
+
+    return stackView;
 }
 
 #pragma mark - Buttons
@@ -183,6 +210,17 @@ static CGFloat const kSwipeButtonWidth = 80.f;
 
 - (OBADepartureRow*)departureRow {
     return (OBADepartureRow*)[self tableRow];
+}
+
+#pragma mark - Expansion
+
+- (void)setExpanded:(BOOL)expanded {
+    if (_expanded == expanded) {
+        return;
+    }
+
+    _expanded = expanded;
+
 }
 
 @end

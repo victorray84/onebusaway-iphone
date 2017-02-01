@@ -44,6 +44,7 @@ static NSInteger kStopsSectionTag = 101;
 @property(nonatomic,strong) OBAStopTableHeaderView *stopHeaderView;
 @property(nonatomic,strong) NSTimer *apptentiveTimer;
 @property(nonatomic,strong) GKActionSheetPicker *actionSheetPicker;
+@property(nonatomic,copy) NSIndexPath *selectedIndexPath;
 
 // FAB Menu
 @property(nonatomic,strong) FloatingButton *FABMenuButton;
@@ -238,9 +239,9 @@ static NSInteger kStopsSectionTag = 101;
 #pragma mark - FAB Actions
 
 - (void)fabAddBookmark {
-//    OBABookmarkRouteDisambiguationViewController *disambiguator = [[OBABookmarkRouteDisambiguationViewController alloc] initWithArrivalsAndDeparturesForStop:self.arrivalsAndDepartures];
-//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:disambiguator];
-//    [self presentViewController:nav animated:YES completion:nil];
+    OBABookmarkRouteDisambiguationViewController *disambiguator = [[OBABookmarkRouteDisambiguationViewController alloc] initWithArrivalsAndDeparturesForStop:self.arrivalsAndDepartures];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:disambiguator];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (void)fabRemindMe {
@@ -644,7 +645,18 @@ static NSInteger kStopsSectionTag = 101;
     [self.tableView endUpdates];
 }
 
-#pragma mark - Table View Hacks
+#pragma mark - Table View Data Source/Delegate Overrides
+
+- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+
+    if ([cell respondsToSelector:@selector(setExpanded:)]) {
+        BOOL expanded = [self.selectedIndexPath isEqual:indexPath];
+        [cell performSelector:@selector(setExpanded:) withObject:@(expanded)];
+    }
+
+    return cell;
+}
 
 // This is used to hide the table view separator underneath an OBAWalkableRow, so
 // that an effect like what is seen in the mockup in the following issue can be
@@ -658,6 +670,32 @@ static NSInteger kStopsSectionTag = 101;
         cell.separatorInset = UIEdgeInsetsMake(0, CGRectGetWidth(bounds)/2.f, 0, CGRectGetWidth(bounds)/2.f);
     }
 }
+
+- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    NSIndexPath *oldIndexPath = self.selectedIndexPath;
+    self.selectedIndexPath = indexPath;
+
+    NSMutableSet *set = [NSMutableSet new];
+    if (oldIndexPath) {
+        [set addObject:oldIndexPath];
+    }
+
+    if (indexPath) {
+        [set addObject:indexPath];
+    }
+
+    [tableView reloadRowsAtIndexPaths:set.allObjects withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
+    return UITableViewAutomaticDimension;
+}
+//
+//- (CGFloat)tableView:(UITableView*)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+//    return [self dynamicCellHeight:indexPath];
+//}
+
 
 #pragma mark - Table Section Creation
 
